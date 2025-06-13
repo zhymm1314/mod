@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/mod-new.iml" filepath="$PROJECT_DIR$/.idea/mod-new.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/nwang.iml" filepath="$PROJECT_DIR$/.idea/nwang.iml" />
     </modules>
   </component>
 </project>
