@@ -13,3 +13,4 @@ storage/logs
 password.txt
 config.yaml
 ./storage/logs/*
+.git/*
