@@ -21,7 +21,20 @@ a,
   }
 }
 
-@media (min-width: 1024px) {
+
+/* 
+这段代码被注释掉的原因分析：
+1. body { display: flex; place-items: center; } 
+   - 这会让整个页面内容居中显示，可能遮挡了头部内容
+
+2. #app { display: grid; grid-template-columns: 1fr 1fr; }
+   - 这会强制将app容器分成两列网格布局
+   - 但你的Vue组件结构是垂直布局（header + main）
+   - 网格布局会破坏正常的文档流注释掉后恢复了正常的块级元素垂直排列，所以头部div能正常显示
+建议删除这段代码，因为它与你的实际布局需求不符
+*/
+
+/* @media (min-width: 1024px) {
   body {
     display: flex;
     place-items: center;
@@ -32,4 +45,4 @@ a,
     grid-template-columns: 1fr 1fr;
     padding: 0 2rem;
   }
-}
+} */

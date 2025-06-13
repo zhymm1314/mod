@@ -5,730 +5,113 @@ alwaysApply: false
 ---
 # 前端开发指南 (Vue 3 + Vite)
 
-这是一个基于 Vue 3 和 Vite 的现代前端项目，使用 Composition API 进行组件开发。
+基于 Vue 3 和 Vite 的现代前端项目开发规范和最佳实践。
 
-## 🚀 核心文件
+## 🚀 核心技术栈
 
-### 应用入口
-- **主入口**: [frontend/src/main.js](mdc:frontend/src/main.js) - Vue应用初始化入口
-- **根组件**: [frontend/src/App.vue](mdc:frontend/src/App.vue) - 应用主组件，包含所有业务逻辑
+- **Vue 3.5.13**: Composition API组件开发
+- **Vite 6.2.4**: 现代构建工具，热重载
+- **Node.js 18+**: 运行环境
+- **原生CSS**: 响应式设计，Grid/Flexbox布局
 
-### 配置文件
-- **Vite配置**: [frontend/vite.config.js](mdc:frontend/vite.config.js) - 构建工具配置，包含代理设置
-- **包管理**: [frontend/package.json](mdc:frontend/package.json) - 项目依赖和脚本配置
+## ⚠️ 关键布局规则 - 必须遵守！
 
-## 💻 技术栈
+### 1. CSS Grid布局失效的根本原因
 
-### 核心框架
-- **Vue 3.5.13**: 使用Composition API进行组件开发
-- **Vite 6.2.4**: 现代前端构建工具，支持热重载
-- **Node.js 18**: 运行环境要求
-- **原生CSS**: 响应式设计，支持移动端适配
+**最常见问题：父级容器的max-width限制导致Grid退化为纵向列表**
 
-### 开发特性
-- **API代理**: Vite开发服务器代理后端API请求
-- **热重载**: 开发过程中自动刷新页面
-- **模块化**: ES Modules支持现代JavaScript特性
-- **TypeScript支持**: 可选的TypeScript类型检查
-
-## 📁 项目结构
-
-### 源码目录 (frontend/src/)
-```
-frontend/src/
-├── App.vue          # 根组件 - 包含主要业务逻辑
-├── main.js          # 应用入口 - Vue应用初始化
-├── components/      # 公共组件目录
-│   ├── Header.vue   # 页面头部组件
-│   ├── Footer.vue   # 页面底部组件
-│   └── ...          # 其他业务组件
-├── assets/          # 静态资源目录
-│   ├── images/      # 图片资源
-│   ├── styles/      # 样式文件
-│   └── fonts/       # 字体文件
-├── utils/           # 工具函数
-├── api/             # API接口封装
-└── router/          # 路由配置（如果使用Vue Router）
-```
-
-### 构建输出
-- **开发模式**: `npm run dev` - 启动开发服务器 (http://localhost:5173)
-- **生产构建**: `npm run build` - 构建到 `dist/` 目录
-- **预览模式**: `npm run preview` - 预览生产构建
-
-## 🔌 API集成
-
-### 代理配置
-Vite配置文件中设置代理，将`/api/*`请求转发到后端服务：
-```javascript
-// vite.config.js
-export default {
-  server: {
-    proxy: {
-      '/api': {
-        target: 'http://localhost:8080',
-        changeOrigin: true,
-        secure: false
-      }
-    }
-  }
-}
-```
-
-### API调用示例
-```javascript
-// 获取数据
-const fetchData = async () => {
-  try {
-    const response = await fetch('/api/users')
-    const data = await response.json()
-    return data
-  } catch (error) {
-    console.error('API调用失败:', error)
-    throw error
-  }
-}
-
-// 发送数据
-const postData = async (userData) => {
-  try {
-    const response = await fetch('/api/users', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify(userData)
-    })
-    return await response.json()
-  } catch (error) {
-    console.error('数据提交失败:', error)
-    throw error
-  }
-}
-```
-
-## 📋 开发规范
-
-### 组件开发规范
-1. **单文件组件**: 使用`.vue`文件格式
-2. **Composition API**: 优先使用Vue 3的Composition API
-3. **响应式数据**: 使用`ref`和`reactive`管理状态
-4. **生命周期**: 使用`onMounted`、`onUnmounted`等组合式API钩子
-5. **Props验证**: 使用`defineProps`定义组件属性
-
-### Vue 3 Composition API 示例
-```vue
-<template>
-  <div class="user-component">
-    <h2>{{ title }}</h2>
-    <ul>
-      <li v-for="user in users" :key="user.id">
-        {{ user.name }} - {{ user.email }}
-      </li>
-    </ul>
-    <button @click="loadUsers">加载用户</button>
-  </div>
-</template>
-
-<script setup>
-import { ref, onMounted } from 'vue'
-
-// 定义响应式数据
-const title = ref('用户列表')
-const users = ref([])
-const loading = ref(false)
-
-// 定义方法
-const loadUsers = async () => {
-  loading.value = true
-  try {
-    const response = await fetch('/api/users')
-    users.value = await response.json()
-  } catch (error) {
-    console.error('加载用户失败:', error)
-  } finally {
-    loading.value = false
-  }
-}
-
-// 生命周期
-onMounted(() => {
-  loadUsers()
-})
-</script>
-
-<style scoped>
-.user-component {
-  padding: 20px;
-}
-</style>
-```
-
-### 样式规范
-1. **Scoped样式**: 使用`<style scoped>`避免样式冲突
-2. **BEM命名**: 遵循BEM CSS命名规范
-3. **响应式设计**: 支持不同屏幕尺寸的适配
-4. **现代CSS**: 使用Flexbox和Grid布局
-5. **CSS变量**: 使用CSS自定义属性管理主题色彩
-
-### CSS样式示例
-```vue
-<style scoped>
-/* BEM命名规范 */
-.user-list {
-  padding: 1rem;
-}
-
-.user-list__item {
-  display: flex;
-  align-items: center;
-  padding: 0.5rem;
-  border-bottom: 1px solid #eee;
-}
-
-.user-list__item--active {
-  background-color: #f0f8ff;
-}
-
-.user-list__avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  margin-right: 1rem;
-}
-
-/* 响应式设计 */
-@media (max-width: 768px) {
-  .user-list {
-    padding: 0.5rem;
-  }
-}
-</style>
-```
-
-### 文件命名规范
-- **组件**: 使用PascalCase命名 (UserProfile.vue)
-- **页面**: 使用PascalCase命名 (HomePage.vue)
-- **工具文件**: 使用camelCase命名 (apiUtils.js)
-- **常量文件**: 使用SCREAMING_SNAKE_CASE (API_CONSTANTS.js)
-
-### 资源管理
-- **静态资源**: 图片、字体等放在 `src/assets/` 目录下
-- **公共资源**: 放在 `public/` 目录下，可直接通过URL访问
-- **图片优化**: 使用适当的图片格式（WebP、AVIF等）
-- **懒加载**: 对大图片和组件实现懒加载
-
-## 🔧 开发工具
-
-### 环境准备
-1. **Node.js**: 安装Node.js 18或更高版本
-2. **包管理器**: 推荐使用npm或yarn
-3. **IDE**: 推荐使用VS Code + Vetur/Volar插件
-
-### 安装和启动
-```bash
-# 安装依赖
-cd frontend
-npm install
-
-# 启动开发服务器
-npm run dev
-
-# 构建生产版本
-npm run build
-
-# 预览生产构建
-npm run preview
-```
-
-### 调试技巧
-1. **浏览器DevTools**: F12打开开发者工具，使用Console、Network、Elements面板
-2. **Vue DevTools**: 安装Vue DevTools浏览器扩展，调试Vue组件状态
-3. **网络面板**: 查看API请求和响应，调试接口问题
-4. **控制台日志**: 使用`console.log`、`console.warn`、`console.error`进行调试
-5. **Source Map**: 开发环境自动生成，便于调试打包后的代码
-
-### 性能优化
-1. **代码分割**: 使用动态import()实现路由和组件的懒加载
-2. **Bundle分析**: 使用`npm run build -- --analyze`分析打包体积
-3. **图片优化**: 压缩图片，使用现代图片格式
-4. **缓存策略**: 合理配置浏览器缓存和CDN缓存
-5. **Tree Shaking**: Vite自动进行无用代码剔除
-
-## 🚀 快速开始
-
-### 创建新组件
-```bash
-# 在 src/components/ 目录下创建新组件
-touch src/components/NewComponent.vue
-```
-
-### 添加路由（如果使用Vue Router）
-```javascript
-// src/router/index.js
-import { createRouter, createWebHistory } from 'vue-router'
-
-const routes = [
-  {
-    path: '/',
-    name: 'Home',
-    component: () => import('../views/Home.vue')
-  },
-  {
-    path: '/about',
-    name: 'About',
-    component: () => import('../views/About.vue')
-  }
-]
-
-const router = createRouter({
-  history: createWebHistory(),
-  routes
-})
-
-export default router
-```
-
-### 状态管理（如果使用Pinia）
-```javascript
-// src/stores/user.js
-import { defineStore } from 'pinia'
-
-export const useUserStore = defineStore('user', {
-  state: () => ({
-    currentUser: null,
-    isLoggedIn: false
-  }),
-  
-  actions: {
-    async login(credentials) {
-      // 登录逻辑
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(credentials)
-      })
-      
-      if (response.ok) {
-        this.currentUser = await response.json()
-        this.isLoggedIn = true
-      }
-    },
-    
-    logout() {
-      this.currentUser = null
-      this.isLoggedIn = false
-    }
-  }
-})
-```
-
-这个前端指南提供了Vue 3 + Vite项目的完整开发参考，包含了现代前端开发的最佳实践。
-
-## 🎨 网格布局设计规范
-
-### 响应式卡片网格
-对于需要展示大量数据项（如商品列表、文章列表、用户卡片等）的界面，使用CSS Grid实现响应式卡片布局是最佳实践。
-
-#### 核心设计原则
-1. **自适应列数**: 根据容器宽度自动调整列数
-2. **统一卡片尺寸**: 保持视觉一致性
-3. **合理间距**: 提供良好的视觉层次
-4. **响应式断点**: 适配不同设备屏幕
-
-#### 标准网格布局实现
-
-**HTML结构**:
-```vue
-<template>
-  <div class="grid-container">
-    <!-- 网格容器 -->
-    <div class="item-grid">
-      <div v-for="item in items" :key="item.id" class="item-card">
-        <!-- 卡片内容 -->
-        <div class="card-header">
-          <h3 class="card-title">{{ item.title }}</h3>
-          <span class="card-badge">{{ item.version }}</span>
-        </div>
-        
-        <div class="card-body">
-          <div class="card-meta">
-            <span class="meta-item">🎮 {{ item.category }}</span>
-            <span class="meta-item">👤 {{ item.author }}</span>
-          </div>
-          
-          <div class="card-tags">
-            <span v-for="tag in item.tags" :key="tag" class="tag">
-              {{ tag }}
-            </span>
-          </div>
-          
-          <div class="card-stats">
-            <span class="stat">⭐ {{ item.rating }}</span>
-            <span class="stat">📥 {{ item.downloads }}</span>
-          </div>
-        </div>
-        
-        <div class="card-actions">
-          <button class="btn-secondary">详情</button>
-          <button class="btn-primary">下载</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
-```
-
-**CSS Grid样式**:
-```vue
-<style scoped>
-/* 网格容器 */
-.item-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 12px;
-  margin-bottom: 16px;
-  padding: 0;
-}
-
-/* 卡片基础样式 */
-.item-card {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  overflow: hidden;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
-}
-
-.item-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-}
-
-/* 卡片头部 */
-.card-header {
-  padding: 16px 16px 8px;
-  border-bottom: 1px solid rgba(102, 126, 234, 0.1);
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-}
-
-.card-title {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #333;
-  margin: 0;
-  flex: 1;
-  line-height: 1.3;
-}
-
-.card-badge {
-  display: inline-block;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: white;
-  padding: 2px 8px;
-  border-radius: 12px;
-  font-size: 11px;
-  font-weight: 500;
-  flex-shrink: 0;
-  margin-left: 8px;
-}
-
-/* 卡片主体 */
-.card-body {
-  padding: 12px 16px;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.card-meta {
-  display: flex;
-  justify-content: space-between;
-  font-size: 13px;
-  color: #666;
-}
-
-.meta-item {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.card-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  min-height: 20px;
-}
-
-.tag {
-  display: inline-block;
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
-  color: #667eea;
-  padding: 2px 8px;
-  border-radius: 10px;
-  font-size: 11px;
-  font-weight: 500;
-  border: 1px solid rgba(102, 126, 234, 0.2);
-}
-
-.card-stats {
-  display: flex;
-  justify-content: space-between;
-  font-size: 12px;
-  color: #666;
-  margin-top: auto;
-}
-
-.stat {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-}
-
-/* 卡片操作区 */
-.card-actions {
-  padding: 12px 16px;
-  background: rgba(248, 249, 250, 0.5);
-  display: flex;
-  gap: 8px;
-  justify-content: space-between;
-  border-top: 1px solid rgba(0, 0, 0, 0.05);
-}
-
-.btn-secondary {
-  flex: 1;
-  padding: 8px 16px;
-  background: rgba(102, 126, 234, 0.1);
-  color: #667eea;
-  border: 1px solid rgba(102, 126, 234, 0.2);
-  border-radius: 6px;
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.btn-secondary:hover {
-  background: rgba(102, 126, 234, 0.2);
-  transform: translateY(-1px);
-}
-
-.btn-primary {
-  flex: 1;
-  padding: 8px 16px;
-  background: linear-gradient(135deg, #28a745, #20c997);
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
-}
-
-.btn-primary:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
-}
-
-/* 响应式断点 */
-/* 大屏幕 (> 1200px) - 4-5列 */
-@media (min-width: 1201px) {
-  .item-grid {
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 16px;
-  }
-}
-
-/* 中等屏幕 (768px - 1200px) - 2-3列 */
-@media (max-width: 1200px) {
-  .item-grid {
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 12px;
-  }
-}
-
-/* 平板 (481px - 768px) - 2列 */
-@media (max-width: 768px) {
-  .item-grid {
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 10px;
-  }
-  
-  .card-header {
-    padding: 12px 12px 6px;
-  }
-  
-  .card-title {
-    font-size: 1rem;
-  }
-  
-  .card-body {
-    padding: 10px 12px;
-  }
-  
-  .card-actions {
-    padding: 10px 12px;
-  }
-}
-
-/* 手机 (≤ 480px) - 1列 */
-@media (max-width: 480px) {
-  .item-grid {
-    grid-template-columns: 1fr;
-    gap: 8px;
-  }
-  
-  .card-header {
-    padding: 10px 10px 5px;
-  }
-  
-  .card-title {
-    font-size: 0.95rem;
-  }
-  
-  .card-body {
-    padding: 8px 10px;
-  }
-  
-  .card-actions {
-    padding: 8px 10px;
-  }
-  
-  .card-meta {
-    flex-direction: column;
-    gap: 4px;
-  }
-}
-</style>
-```
-
-### 网格布局设计要点
-
-#### 1. 网格系统配置
-- **最小列宽**: 280px（桌面），确保内容可读性
-- **自动填充**: `repeat(auto-fill, minmax(280px, 1fr))`
-- **间距设计**: 12-16px间距，提供良好的视觉分离
-
-#### 2. 响应式断点策略
+#### ❌ 错误配置
 ```css
-/* 断点系统 */
-- 超大屏幕 (> 1200px): 4-5列，间距16px
-- 大屏幕 (769px - 1200px): 2-3列，间距12px  
-- 平板 (481px - 768px): 2列，间距10px
-- 手机 (≤ 480px): 1列，间距8px
-```
+.app-main {
+  max-width: 1400px;  /* 罪魁祸首！ */
+  margin: 0 auto;
+}
 
-#### 3. 卡片结构标准
-- **卡片头部**: 标题 + 标签/徽章
-- **卡片主体**: 元信息 + 分类标签 + 统计数据
-- **操作区域**: 主要操作 + 次要操作
-
-#### 4. 交互效果规范
-- **悬停效果**: `translateY(-4px)` + 阴影增强
-- **点击反馈**: `translateY(-1px)` 按钮反馈
-- **过渡动画**: `0.3s ease` 统一过渡时间
-
-### 实际应用示例
-
-#### Mod搜索平台卡片网格
-```vue
-<!-- ModList.vue -->
-<template>
-  <div class="mod-list">
-    <div class="mod-grid">
-      <div v-for="mod in mods" :key="mod.id" class="mod-card">
-        <!-- 实际的mod卡片结构 -->
-      </div>
-    </div>
-  </div>
-</template>
-
-<style scoped>
 .mod-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 12px;
-  margin-bottom: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  /* 1400px ÷ 380px ≈ 3.6列，视觉效果差 */
 }
-
-/* 具体卡片样式... */
-</style>
 ```
 
-#### 产品列表网格
-```vue
-<!-- ProductGrid.vue -->
-<template>
-  <div class="product-grid">
-    <div v-for="product in products" :key="product.id" class="product-card">
-      <img :src="product.image" class="product-image" />
-      <div class="product-info">
-        <h3 class="product-name">{{ product.name }}</h3>
-        <p class="product-price">¥{{ product.price }}</p>
-      </div>
-    </div>
-  </div>
-</template>
-
-<style scoped>
-.product-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 16px;
+#### ✅ 正确解决方案
+```css
+.app-main {
+  width: 100% !important;
+  max-width: none !important;  /* 关键！ */
+  margin: 0 !important;
+  padding: 8px !important;
+  box-sizing: border-box !important;
 }
 
-.product-card {
-  background: white;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  transition: transform 0.3s ease;
+.container {
+  width: 100% !important;
+  max-width: none !important;  /* 关键！ */
+  padding: 0 !important;
+  margin: 0 !important;
 }
 
-.product-card:hover {
-  transform: translateY(-2px);
+.mod-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important;
+  gap: 20px !important;
 }
-</style>
 ```
 
-### 网格布局最佳实践
+### 2. 避免100vw导致的水平溢出
 
-#### ✅ 推荐做法
-1. **使用CSS Grid**: 比Flexbox更适合二维布局
-2. **auto-fill + minmax**: 实现真正的响应式网格
-3. **统一卡片高度**: 使用`display: flex; flex-direction: column`
-4. **合理间距**: 不同屏幕使用不同间距值
-5. **平滑过渡**: 为交互效果添加过渡动画
+#### ❌ 错误：使用100vw
+```css
+body {
+  width: 100vw;  /* 包含滚动条宽度，导致溢出 */
+}
+```
 
-#### ❌ 避免做法
-1. **固定列数**: 不要写死`grid-template-columns: repeat(4, 1fr)`
-2. **过小最小宽度**: 避免内容挤压变形
-3. **忽略移动端**: 必须考虑小屏幕的适配
-4. **过度动画**: 避免过于复杂的动画效果
-5. **内容溢出**: 确保长文本有省略或换行处理
+#### ✅ 正确：使用100%
+```css
+body {
+  width: 100% !important;
+  overflow-x: hidden !important;
+}
+```
 
-这套网格布局规范确保了列表界面在各种设备上都能提供良好的用户体验，是现代前端开发的标准实践。
+### 3. 禁止破坏性的全局Grid布局
 
-## 🔄 Grid布局模式切换最佳实践
+#### ❌ 危险的全局布局
+```css
+/* 这种代码会破坏Vue组件的正常文档流 */
+@media (min-width: 1024px) {
+  body {
+    display: flex;
+    place-items: center;  /* 会遮挡头部内容 */
+  }
 
-### 布局模式选择指南
+  #app {
+    display: grid;
+    grid-template-columns: 1fr 1fr;  /* 强制双列，破坏垂直布局 */
+  }
+}
+```
 
-根据实际需求选择合适的布局模式：
+**问题分析：**
+- `body { display: flex; place-items: center; }` 让整个页面居中，遮挡头部
+- `#app { display: grid; grid-template-columns: 1fr 1fr; }` 强制双列布局，破坏Vue组件的垂直结构（header + main）
+- 与实际的Vue组件布局需求不符
 
-#### 1. 网格布局 (Grid Layout) - 多行多列
-**适用场景**: 需要多行多列展示，自适应屏幕宽度
+#### ✅ 正确的响应式布局
+```css
+/* 只在超宽屏幕使用，且不破坏组件结构 */
+@media (min-width: 3200px) {
+  .main-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+}
+```
+
+## 🎨 响应式Grid布局最佳实践
+
+### 标准Grid配置
 ```css
 .item-grid {
   display: grid !important;
@@ -737,335 +120,173 @@ export const useUserStore = defineStore('user', {
   width: 100% !important;
 }
 
-.item-card {
-  /* Grid项目自动适应网格，无需设置固定width */
-  display: flex;
-  flex-direction: column;
-}
-```
-
-#### 2. 横向滚动布局 (Horizontal Scroll) - 单行滚动
-**适用场景**: 强制单行显示，超出部分横向滚动
-```css
-.scroll-container {
-  overflow-x: auto !important;
-  overflow-y: hidden !important;
-}
-
-.item-grid {
-  display: flex !important;
-  flex-direction: row !important;
-  flex-wrap: nowrap !important;
-  gap: 20px !important;
-  width: max-content !important;
-}
-
-.item-card {
-  width: 300px !important;
-  min-width: 300px !important;
-  max-width: 300px !important;
-  flex-shrink: 0 !important;
-}
-```
-
-### 常见布局切换场景
-
-#### 场景1: 从横向滚动改为网格布局
-```css
-/* 修改前 - 横向滚动 */
-.mod-grid {
-  display: flex;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-}
-
-/* 修改后 - 网格布局 */
-.mod-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  width: 100%;
-}
-```
-
-#### 场景2: 从固定列数改为自适应网格
-```css
-/* 修改前 - 固定列数 */
-.mod-grid {
-  grid-template-columns: repeat(4, 1fr);
-}
-
-/* 修改后 - 自适应列数 */
-.mod-grid {
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-}
-```
-
-### 布局调试技巧
-
-#### 1. 使用调试边框快速识别问题
-```css
-.debug-grid {
-  border: 3px solid red !important;
-  background: yellow !important;
-}
-
-.debug-card {
-  border: 2px solid blue !important;
-}
-```
-
-#### 2. 检查容器宽度限制
-```css
-/* 确保容器没有宽度限制 */
-.container {
-  width: 100% !important;
-  max-width: none !important;
-  padding: 0 !important;
-}
-```
-
-#### 3. 验证Grid配置
-```css
-/* 使用浏览器开发者工具查看Grid线条 */
-.mod-grid {
-  display: grid;
-  /* 在开发者工具中启用Grid覆盖层 */
-}
-```
-
-### 响应式Grid最佳实践
-
-#### 1. 渐进式minmax值
-```css
-/* 不同屏幕尺寸使用不同的最小宽度 */
-@media (min-width: 1401px) {
-  .mod-grid {
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+/* 4K屏幕优化 */
+@media (min-width: 2561px) {
+  .item-grid {
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)) !important;
+    gap: 32px !important;
   }
 }
 
-@media (max-width: 1400px) {
-  .mod-grid {
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+/* 2K屏幕 */
+@media (min-width: 1921px) and (max-width: 2560px) {
+  .item-grid {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)) !important;
+    gap: 28px !important;
   }
 }
 
-@media (max-width: 600px) {
-  .mod-grid {
-    grid-template-columns: 1fr; /* 移动端单列 */
-  }
-}
-```
-
-#### 2. 间距自适应
-```css
-/* 不同屏幕使用不同间距 */
-.mod-grid {
-  gap: clamp(12px, 2vw, 24px);
-}
-```
-
-## 🔧 常见问题与解决方案
-
-### CSS Grid布局问题 - Mod列表网格化
-
-**问题描述**: 
-在实现mod列表的网格布局时，遇到列表始终呈现竖直排列，无法实现横向网格效果的问题。
-
-**根本原因分析**:
-1. **容器宽度限制**: 父级容器的`max-width`、`padding`等属性限制了Grid容器的实际可用宽度
-2. **min-width冲突**: Grid项目的`min-width`设置过大，导致计算出的列宽无法满足多列显示
-3. **flex-wrap换行**: 使用Flexbox时，`flex-wrap: wrap`会导致项目过早换行，看起来像竖直排列
-4. **Vue Scoped样式**: scoped样式可能导致CSS优先级问题，影响Grid布局生效
-
-**解决方案**:
-
-#### 1. 容器宽度强化
-```css
-/* 确保容器占满视口宽度 */
-.app-main {
-  padding: 8px !important;
-  width: 100vw !important;
-  max-width: none !important;
-  margin: 0 !important;
-  box-sizing: border-box !important;
-}
-
-.container {
-  width: 100% !important;
-  max-width: none !important;
-  padding: 0 !important;
-  margin: 0 !important;
-}
-```
-
-#### 2. CSS Grid最佳实践
-```css
-/* 使用CSS Grid替代Flexbox实现网格布局 */
-.mod-grid {
-  display: grid !important;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)) !important;
-  gap: 20px !important;
-  width: 100% !important;
-  max-width: none !important;
-  margin: 0 0 20px 0 !important;
-  padding: 20px !important;
-  box-sizing: border-box !important;
-}
-
-.mod-card {
-  /* Grid项目自动适应网格，无需设置width */
-  background: white;
-  border-radius: 12px;
-  overflow: hidden;
-  /* 确保卡片高度一致 */
-  display: flex;
-  flex-direction: column;
-}
-```
-
-#### 3. 响应式Grid设计
-```css
-/* 不同屏幕尺寸的网格适配 */
-@media (max-width: 1200px) {
-  .mod-grid {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)) !important;
-    gap: 16px !important;
-  }
-}
-
+/* 平板 */
 @media (max-width: 768px) {
-  .mod-grid {
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)) !important;
+  .item-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)) !important;
     gap: 12px !important;
-    padding: 15px !important;
   }
 }
 
+/* 手机 */
 @media (max-width: 600px) {
-  .mod-grid {
+  .item-grid {
     grid-template-columns: 1fr !important;
     gap: 10px !important;
-    padding: 10px !important;
   }
 }
 ```
 
-#### 4. 调试技巧
-```css
-/* 使用调试样式快速识别布局问题 */
-.mod-grid {
-  /* 临时调试样式 */
-  border: 3px solid red !important;
-  background: yellow !important;
-}
+### 调试检查清单
+1. **检查所有父级容器**: 从#app到.grid的每一层
+2. **移除max-width限制**: 任何max-width都可能是罪魁祸首
+3. **使用100%而非100vw**: 避免水平溢出
+4. **添加调试边框**: `border: 3px solid red !important;`
+5. **验证响应式**: 测试不同屏幕尺寸
 
-.mod-card {
-  border: 2px solid blue !important;
-}
-```
+## 📋 Vue 3 开发规范
 
-**关键要点**:
-- ✅ **优先使用CSS Grid**: 比Flexbox更适合网格布局
-- ✅ **minmax合理设置**: 避免min-width过大导致单列显示
-- ✅ **容器宽度检查**: 确保父级容器没有宽度限制
-- ✅ **使用!important**: 在调试阶段强制覆盖可能的样式冲突
-- ✅ **响应式断点**: 不同屏幕尺寸使用合适的网格配置
-- ✅ **调试边框**: 使用明显的颜色边框快速识别布局问题
-
-**避免的常见错误**:
-- ❌ 在Grid项目上设置固定width
-- ❌ min-width设置过大
-- ❌ 忽略父级容器的宽度限制
-- ❌ 在移动端使用过大的minmax值
-- ❌ 混用Flexbox和Grid导致布局冲突
-
-### 性能优化
-
-#### 1. 组件懒加载
-```javascript
-// 路由级别的懒加载
-const UserProfile = () => import('./components/UserProfile.vue')
-
-// 条件渲染的懒加载
-import { defineAsyncComponent } from 'vue'
-const AsyncComponent = defineAsyncComponent(() => import('./HeavyComponent.vue'))
-```
-
-#### 2. 列表虚拟化
+### Composition API 标准模板
 ```vue
 <template>
-  <div class="virtual-list" ref="container">
-    <div 
-      v-for="item in visibleItems" 
-      :key="item.id"
-      class="list-item"
-    >
+  <div class="component-name">
+    <h2>{{ title }}</h2>
+    <div v-for="item in items" :key="item.id" class="item">
       {{ item.name }}
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 
-const container = ref(null)
-const scrollTop = ref(0)
-const itemHeight = 50
-const visibleCount = 10
+// 响应式数据
+const title = ref('标题')
+const items = ref([])
+const loading = ref(false)
 
-const visibleItems = computed(() => {
-  const start = Math.floor(scrollTop.value / itemHeight)
-  const end = start + visibleCount
-  return items.value.slice(start, end)
+// 方法
+const loadData = async () => {
+  loading.value = true
+  try {
+    const response = await fetch('/api/data')
+    items.value = await response.json()
+  } catch (error) {
+    console.error('加载失败:', error)
+  } finally {
+    loading.value = false
+  }
+}
+
+// 生命周期
+onMounted(() => {
+  loadData()
 })
 </script>
+
+<style scoped>
+.component-name {
+  padding: 1rem;
+}
+
+.item {
+  padding: 0.5rem;
+  border-bottom: 1px solid #eee;
+}
+</style>
 ```
 
-## 🛠️ 开发工具
+## 🔧 开发工具
 
-### VSCode扩展推荐
-1. **Vetur**: Vue.js语法高亮和智能提示
-2. **Vue Language Features (Volar)**: Vue 3官方语言服务
-3. **Auto Rename Tag**: 自动重命名HTML标签
-4. **Prettier**: 代码格式化
-5. **ESLint**: 代码质量检查
+### 环境配置
+```bash
+# 安装依赖
+npm install
 
-### 浏览器调试工具
-1. **Vue Devtools**: Vue组件调试工具
-2. **Network面板**: 监控API请求和响应
-3. **Console**: 查看错误日志和调试信息
-4. **Elements**: 检查DOM结构和CSS样式
+# 启动开发服务器
+npm run dev
 
-## 📚 学习资源
+# 构建生产版本
+npm run build
+```
 
-### 官方文档
-- [Vue 3官方文档](mdc:https:/vuejs.org)
-- [Vite官方文档](mdc:https:/vitejs.dev)
-- [Vue Router文档](mdc:https:/router.vuejs.org)
-- [Pinia状态管理](mdc:https:/pinia.vuejs.org)
+### API代理配置
+```javascript
+// vite.config.js
+export default {
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8080',
+        changeOrigin: true
+      }
+    }
+  }
+}
+```
 
-### 实用教程
-- [Vue 3 Composition API指南](mdc:https:/vuejs.org/guide/composition-api-introduction.html)
-- [现代CSS Grid布局教程](mdc:https:/css-tricks.com/snippets/css/complete-guide-grid)
-- [响应式设计最佳实践](mdc:https:/web.dev/responsive-web-design-basics)
+## 🚨 常见错误避免
 
-## 🚨 注意事项
+### 1. 容器宽度问题
+- ❌ 使用固定max-width限制Grid布局
+- ❌ 使用100vw导致水平溢出
+- ❌ 忘记设置box-sizing: border-box
 
-### 安全最佳实践
-1. **输入验证**: 对所有用户输入进行验证和清理
-2. **XSS防护**: 避免直接插入HTML内容，使用Vue的文本插值
-3. **CSRF保护**: 在表单中使用CSRF令牌
-4. **敏感信息**: 不要在前端代码中硬编码敏感信息
+### 2. Grid布局问题
+- ❌ minmax最小值设置过大
+- ❌ 忘记添加响应式断点
+- ❌ 在Grid项目上设置固定width
 
-### 性能注意事项
-1. **避免内存泄漏**: 及时清理事件监听器和定时器
-2. **图片优化**: 使用适当的图片格式和尺寸
-3. **代码分割**: 使用动态导入实现代码分割
-4. **缓存策略**: 合理使用浏览器缓存和CDN
+### 3. 全局样式冲突
+- ❌ 破坏性的全局Grid布局
+- ❌ body上的flex布局影响组件
+- ❌ 过度使用!important
 
-### 兼容性考虑
-1. **浏览器支持**: 确保支持目标浏览器版本
-2. **移动端适配**: 测试不同设备和屏幕尺寸
-3. **网络条件**: 考虑慢网络环境下的用户体验
-4. **可访问性**: 遵循WCAG无障碍访问标准
+### 4. 组件开发问题
+- ❌ 忘记使用scoped样式
+- ❌ 直接修改props
+- ❌ 内存泄漏（未清理事件监听器）
+
+## 📚 性能优化
+
+### 代码分割
+```javascript
+// 路由懒加载
+const UserProfile = () => import('./components/UserProfile.vue')
+
+// 条件渲染懒加载
+import { defineAsyncComponent } from 'vue'
+const AsyncComponent = defineAsyncComponent(() => import('./HeavyComponent.vue'))
+```
+
+### 图片优化
+- 使用WebP格式
+- 实现懒加载
+- 压缩图片尺寸
+
+## 🎯 总结
+
+**核心原则：**
+1. **容器宽度**: 移除max-width限制，使用100%而非100vw
+2. **Grid布局**: 合理设置minmax值，添加响应式断点
+3. **避免破坏性全局样式**: 不要在body/#app上使用会破坏文档流的布局
+4. **组件化开发**: 使用Composition API，遵循Vue 3最佳实践
+5. **性能优先**: 代码分割、图片优化、合理使用缓存
+
+**记住：任何一层容器的max-width限制都会导致Grid布局失效！**
