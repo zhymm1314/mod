@@ -1,0 +1,286 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# 后端开发指南 (Go + Gin)
+
+这是一个基于Gin框架的Go语言后端项目，采用标准的MVC（Model-View-Controller）架构模式。
+
+## 🚀 核心文件
+
+### 项目入口
+- **主入口**: [backend/main.go](mdc:backend/main.go) - 应用程序主入口，负责初始化配置、日志、数据库、Redis、RabbitMQ等组件
+- **路由配置**: [backend/routes/api.go](mdc:backend/routes/api.go) - API路由定义
+- **应用配置**: [backend/config.yaml](mdc:backend/config.yaml) - 生产环境配置
+
+## 🔧 MVC架构详解
+
+### 路由层 (Routes)
+- **主要文件**: [backend/routes/api.go](mdc:backend/routes/api.go)
+- **功能**: 定义API路由规则，将HTTP请求映射到控制器方法
+- **示例路由**:
+  - `POST /auth/register` -> 用户注册
+  - `POST /auth/login` -> 用户登录
+  - 认证路由组使用JWT中间件保护
+
+### 控制器层 (Controllers)
+位于 `backend/app/controllers/` 目录，处理HTTP请求和响应：
+
+#### 认证控制器
+- **文件**: [backend/app/controllers/auth.go](mdc:backend/app/controllers/auth.go)
+- **功能**: 处理用户认证相关业务
+- **主要方法**:
+  - `Login()` - 用户登录验证
+  - `Info()` - 获取用户信息
+  - `Logout()` - 用户登出
+  - `Register()` - 用户注册
+
+#### 用户控制器
+- **文件**: [backend/app/controllers/user.go](mdc:backend/app/controllers/user.go)
+- **功能**: 处理用户管理相关业务
+
+### 服务层 (Services)  
+位于 `backend/app/services/` 目录，包含业务逻辑：
+
+#### 用户服务
+- **文件**: [backend/app/services/user.go](mdc:backend/app/services/user.go)
+- **功能**: 用户相关业务逻辑
+- **主要方法**:
+  - `Register()` - 用户注册逻辑，检查手机号唯一性，密码加密存储
+  - `Login()` - 用户登录验证，验证手机号和密码
+  - `GetUserInfo()` - 根据用户ID获取用户详细信息
+
+#### JWT服务
+- **文件**: [backend/app/services/jwt.go](mdc:backend/app/services/jwt.go)
+- **功能**: JWT令牌管理，包括创建、验证、黑名单管理
+- **主要方法**:
+  - `CreateToken()` - 创建JWT令牌
+  - `JoinBlackList()` - 将令牌加入黑名单
+
+### 模型层 (Models)
+位于 `backend/app/models/` 目录，定义数据结构：
+
+#### 用户模型
+- **文件**: [backend/app/models/user.go](mdc:backend/app/models/user.go)
+- **功能**: 用户数据模型定义
+- **字段**:
+  - `Name` - 用户名称，数据库字段`name1`
+  - `Mobile` - 手机号，带索引，数据库字段`mobile2`
+  - `Password` - 密码，不返回给前端，使用`json:"-"`标签
+- **方法**:
+  - `GetUid()` - 获取用户ID的字符串形式
+
+#### 公共模型
+- **文件**: [backend/app/models/common.go](mdc:backend/app/models/common.go)
+- **功能**: 定义公共字段结构体
+- **包含**: ID、时间戳、软删除等公共字段
+
+## 🛡️ 中间件 (Middleware)
+位于 `backend/app/middleware/` 目录：
+
+- **JWT中间件**: [backend/app/middleware/jwt.go](mdc:backend/app/middleware/jwt.go) - JWT令牌验证，验证请求头中的Authorization字段
+- **CORS中间件**: [backend/app/middleware/cors.go](mdc:backend/app/middleware/cors.go) - 处理跨域请求
+- **恢复中间件**: [backend/app/middleware/recovery.go](mdc:backend/app/middleware/recovery.go) - 捕获panic异常并恢复
+
+## ⚙️ 配置管理
+位于 `backend/config/` 目录，按功能模块分类：
+
+- **应用配置**: [backend/config/app.go](mdc:backend/config/app.go) - 应用基本配置
+- **数据库配置**: [backend/config/database.go](mdc:backend/config/database.go) - 数据库连接配置
+- **Redis配置**: [backend/config/redis.go](mdc:backend/config/redis.go) - Redis连接配置
+- **JWT配置**: [backend/config/jwt.go](mdc:backend/config/jwt.go) - JWT相关配置
+- **日志配置**: [backend/config/log.go](mdc:backend/config/log.go) - 日志级别和输出配置
+- **队列配置**: [backend/config/queue.go](mdc:backend/config/queue.go) - 队列相关配置
+
+## 🚀 引导程序 (Bootstrap)
+位于 `backend/bootstrap/` 目录，负责应用初始化：
+
+- **路由初始化**: [backend/bootstrap/router.go](mdc:backend/bootstrap/router.go) - 设置Gin路由和中间件
+- **数据库初始化**: [backend/bootstrap/db.go](mdc:backend/bootstrap/db.go) - GORM数据库连接和迁移
+- **日志初始化**: [backend/bootstrap/log.go](mdc:backend/bootstrap/log.go) - 日志系统初始化
+- **Redis初始化**: [backend/bootstrap/redis.go](mdc:backend/bootstrap/redis.go) - Redis连接池初始化
+- **配置初始化**: [backend/bootstrap/config.go](mdc:backend/bootstrap/config.go) - 读取YAML配置文件
+- **验证器初始化**: [backend/bootstrap/validator.go](mdc:backend/bootstrap/validator.go) - 参数验证器设置
+
+## 🔧 请求和响应处理
+位于 `backend/app/common/` 目录：
+
+- **请求验证**: `backend/app/common/request/` - 定义请求参数结构和验证规则
+  - 包含Register、Login等请求结构体
+- **响应格式**: `backend/app/common/response/` - 统一API响应格式
+  - `Success()` - 成功响应
+  - `BusinessFail()` - 业务失败响应
+  - `ValidateFail()` - 验证失败响应
+
+## 📋 开发规范
+
+### MVC分层规范
+1. **Controller层**: 只处理HTTP请求/响应，参数验证，调用Service层
+2. **Service层**: 业务逻辑处理，数据库操作，调用Model层
+3. **Model层**: 数据结构定义，数据库映射关系
+
+### main.go 文件规范
+- **职责单一**: `main.go` 文件只负责应用程序启动和初始化
+- **保持整洁**: 不在 `main.go` 中编写复杂的业务逻辑
+- **简单调用**: 只进行简单的方法调用，具体实现放在对应的 `bootstrap` 包中
+- **标准结构**: 按照标准顺序初始化组件（配置 → 日志 → 数据库 → Redis → 路由 → 启动服务器）
+- **错误处理**: 在初始化失败时进行适当的错误处理和程序退出
+
+### 文件命名规范
+- **控制器**: 直接以功能命名，如`auth.go`、`user.go`
+- **服务**: `xxxService` 结构体，全局变量实例
+- **模型**: 单数形式，首字母大写
+
+### 错误处理
+- 使用统一的响应格式（Success、BusinessFail、ValidateFail）
+- 错误信息本地化处理
+- 区分业务错误和系统错误
+
+### 认证授权
+- 使用JWT进行用户认证
+- 支持令牌黑名单机制
+- 中间件统一处理认证逻辑
+
+### 数据库操作
+- 使用GORM作为ORM框架
+- 模型定义使用结构体标签指定数据库字段
+- 支持软删除和时间戳自动管理
+
+### 请求验证
+- 使用Gin的数据绑定功能
+- 统一的错误消息处理
+- 支持JSON、表单等多种请求格式
+
+## 📝 日志管理规范
+
+### 日志目录结构
+- **标准目录**: 所有日志文件统一存放在 `./backend/storage/logs/` 目录下
+- **目录创建**: 应用启动时自动创建日志目录，无需手动创建
+- **权限管理**: 确保应用进程对日志目录有读写权限
+
+### 日志文件分类
+- **应用日志**: `app.log` - 记录应用运行时的信息、警告和错误
+- **数据库日志**: `sql.log` - 记录所有SQL查询操作和数据库相关日志
+- **访问日志**: `access.log` - 记录HTTP请求访问日志（可选）
+- **错误日志**: `error.log` - 记录系统错误和异常信息（可选）
+
+### 日志配置规范
+在 `config.yaml` 中的标准配置：
+```yaml
+log:
+  level: info                    # 日志等级: debug/info/warn/error
+  root_dir: ./storage/logs      # 日志根目录（固定路径）
+  filename: app.log             # 主日志文件名
+  format: console               # 日志格式: console/json
+  show_line: true               # 是否显示代码行号
+  max_backups: 3                # 旧文件的最大个数
+  max_size: 500                 # 日志文件最大大小（MB）
+  max_age: 28                   # 旧文件的最大保留天数
+  compress: true                # 是否压缩旧日志文件
+
+database:
+  enable_file_log_writer: true  # 启用数据库日志文件
+  log_filename: sql.log         # 数据库日志文件名
+```
+
+### 日志轮转策略
+- **大小轮转**: 单个日志文件超过500MB时自动轮转
+- **时间轮转**: 超过28天的日志文件自动删除
+- **备份管理**: 最多保留3个历史备份文件
+- **压缩存储**: 历史日志文件自动压缩以节省磁盘空间
+
+### 版本控制规范
+- **忽略日志**: 在 `.gitignore` 中添加以下规则：
+  ```gitignore
+  storage/logs
+  ./storage/logs/*
+  *.log
+  ```
+- **文档管理**: 在日志目录下创建 `README.md` 说明文档
+
+### 日志使用最佳实践
+1. **统一日志组件**: 使用 `global.App.Log` 进行日志记录
+2. **合理日志级别**: 
+   - `Debug`: 详细的调试信息，仅开发环境使用
+   - `Info`: 一般信息，记录重要的业务流程
+   - `Warn`: 警告信息，不影响程序运行但需要关注
+   - `Error`: 错误信息，程序异常但可以继续运行
+   - `Fatal`: 致命错误，程序无法继续运行
+3. **结构化日志**: 使用 `zap.Any()` 记录结构化数据
+4. **避免敏感信息**: 不在日志中记录密码、令牌等敏感信息
+5. **性能考虑**: 避免在高频调用的代码中使用过多的日志输出
+
+### 日志监控建议
+- **磁盘空间**: 定期监控日志目录的磁盘使用情况
+- **日志分析**: 使用日志分析工具（如ELK Stack）进行日志聚合和分析
+- **告警机制**: 对ERROR级别以上的日志设置告警通知
+- **定期清理**: 根据业务需求调整日志保留策略
+
+### 常见问题解决
+1. **日志文件权限问题**: 确保应用进程对 `storage/logs` 目录有写权限
+2. **日志文件过大**: 调整 `max_size` 配置，启用日志轮转
+3. **磁盘空间不足**: 减少 `max_age` 和 `max_backups` 配置值
+4. **日志丢失**: 检查日志目录路径配置是否正确
+
+## 📚 项目文档规范
+
+### README 文档标准
+项目根目录的 `README.md` 文档应包含以下标准章节：
+
+1. **项目介绍**
+   - 项目名称和简介
+   - 项目初衷和目标用户
+   - 核心特性概述
+
+2. **技术栈说明**
+   - 主要技术组件表格
+   - 版本信息和选型理由
+   - 依赖关系说明
+
+3. **项目结构**
+   - 完整的目录树结构
+   - 各目录和文件的功能说明
+   - 分层架构说明
+
+4. **快速开始**
+   - 环境要求
+   - 安装步骤
+   - 配置说明
+   - 启动验证
+
+5. **开发指南**
+   - API 接口文档
+   - 开发规范
+   - 配置说明
+   - 常见问题
+
+6. **开发路线图**
+   - 已完成功能清单
+   - 开发中功能
+   - 计划功能
+
+### 文档维护原则
+- **及时更新**: 功能变更时同步更新文档
+- **详细说明**: 提供足够的细节和示例
+- **用户友好**: 考虑不同技术背景的开发者
+- **结构清晰**: 使用标准的 Markdown 格式和层级结构
+
+## 🏃‍♂️ 快速开始
+
+### 环境准备
+1. 安装Go 1.19+
+2. 安装MySQL、Redis等依赖服务
+3. 复制`example-config.yaml`为`config.yaml`并配置相关参数
+
+### 启动服务
+```bash
+cd backend
+go mod tidy
+go run main.go
+```
+
+### 开发调试
+- 使用IDE的调试功能进行断点调试
+- 查看日志文件了解运行状态
+- 使用Postman等工具测试API接口

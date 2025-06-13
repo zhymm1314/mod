@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  backend:
+  # 显式指定工作目录（需与 Dockerfile 的 WORKDIR 一致）
+    working_dir: /app
+    build:
+      context: backend
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8080"
+      - "28889:8889"
+    restart: unless-stopped
+    volumes:
+      - /Users/zhanghaiying/nwang/gin-web:/app/src
+    command: sh -c "cd src && go build -o ../main main.go && ../main"  # 编译后运行
+
+
+  frontend:
+  # 显式指定工作目录（需与 Dockerfile 的 WORKDIR 一致）
+    working_dir: /app
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+    volumes:
+      - /Users/zhanghaiying/nwang/frontend:/app/src
+    # command: sh -c "cd src && RUN npm install && RUN npm run build && nginx"  # 编译后运行
