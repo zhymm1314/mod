@@ -86,15 +86,26 @@
 
 ## 🛠️ 安装教程
 
+### 部署方式选择
+
+| 部署方式 | 适用场景 | 优点 | 缺点 |
+|---------|----------|------|------|
+| **Docker部署** | 生产环境、快速体验 | 环境一致、一键启动、包含所有依赖 | 需要Docker环境 |
+| **本地脚本部署** | 本地开发、调试 | 启动快速、便于调试 | 需要手动安装依赖 |
+| **手动分步部署** | 学习理解、自定义配置 | 完全控制、便于学习 | 步骤繁琐 |
+
 ### 环境要求
 
+#### Docker部署环境
+- **Docker**: 20.0+
+- **Docker Compose**: 2.0+
+
+#### 本地开发环境  
 - **Go**: 1.22.3+
 - **Node.js**: 16.0+
 - **MySQL**: 8.0+
 - **Redis**: 6.0+
-- **RabbitMQ**: 3.8+
-- **Docker**: 20.0+ (可选)
-- **Docker Compose**: 2.0+ (可选)
+- **RabbitMQ**: 3.8+ (可选)
 
 ### 方式一：Docker 一键部署（推荐）
 
@@ -106,24 +117,56 @@ cd gin-web
 
 2. **启动所有服务**
 ```bash
-chmod +x start.sh
-./start.sh
+# 使用Docker Compose启动所有服务（包括后端、前端、数据库等）
+docker-compose up -d
 ```
 
 3. **访问应用**
 - 前端地址: http://localhost:3000
 - 后端API: http://localhost:8081
-- 后端管理: http://localhost:28889
 
 4. **停止服务**
 ```bash
-chmod +x stop.sh
-./stop.sh
+# 停止并删除所有容器
+docker-compose down
+```
+
+5. **查看服务状态**
+```bash
+# 查看运行中的容器
+docker-compose ps
+
+# 查看服务日志
+docker-compose logs -f
 ```
 
 ### 方式二：本地开发部署
 
-#### 后端部署
+#### 使用一键脚本（推荐本地开发）
+
+1. **确保环境依赖**
+   - Go 1.22.3+
+   - Node.js 16.0+
+   - MySQL 8.0+（需要预先启动）
+   - Redis 6.0+（需要预先启动）
+
+2. **启动所有服务**
+```bash
+# 给脚本执行权限
+chmod +x start.sh stop.sh
+
+# 一键启动后端和前端服务
+./start.sh
+```
+
+3. **停止服务**
+```bash
+./stop.sh
+```
+
+#### 手动分步部署
+
+##### 后端部署
 
 1. **进入后端目录**
 ```bash
@@ -137,7 +180,7 @@ go mod tidy
 
 3. **配置文件**
 ```bash
-# 复制配置文件模板
+# 复制配置文件模板（如果存在）
 cp example-config.yaml config.yaml
 # 根据实际环境修改配置
 vim config.yaml
@@ -159,7 +202,7 @@ sudo systemctl start redis    # Linux
 go run main.go
 ```
 
-#### 前端部署
+##### 前端部署
 
 1. **进入前端目录**
 ```bash
