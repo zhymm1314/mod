@@ -27,6 +27,7 @@
 - **容器化**: Docker
 - **进程管理**: Shell脚本
 - **代码编辑**: 支持VSCode + Cursor
+- **AI辅助**: Cursor AI编程助手，提供智能代码补全和重构建议
 
 ## 📋 功能特性
 
@@ -52,6 +53,16 @@
 ├── stop.sh                   # 项目停止脚本
 ├── 项目启动指南.md           # 详细启动指南
 ├── 项目状态报告.md           # 项目状态报告
+├── .cursor/                  # Cursor AI配置和规则
+│   └── rules/               # 专业开发规则文件
+│       ├── backend-guide.mdc      # 后端开发规范 (Go+Gin MVC架构)
+│       ├── frontend-guide.mdc     # 前端开发规范 (Vue3+Vite 响应式布局)
+│       ├── testing-guide.mdc      # 测试开发规范 (单元/集成/E2E测试)
+│       ├── communication-guide.mdc # AI交流模式 (需求/开发/调试/测试)
+│       └── documentation-guide.mdc # 文档管理规范
+├── docs/                     # 项目文档目录
+│   ├── setup/               # 🚀 安装配置文档
+│   └── installation-guide.md    # 详细安装指南
 ├── mysql/                    # MySQL数据库相关文件
 ├── backend/                  # 后端Go项目
 │   ├── main.go              # 项目入口文件
@@ -386,6 +397,107 @@ DESCRIBE users;
 
 ### 📊 项目状态
 - [**项目报告**](docs/development/project-reports.md) - 当前状态和功能清单
+
+### 🔧 开发环境配置
+
+### Cursor AI 编程助手配置
+
+本项目专为 **Cursor AI** 编程环境优化，提供智能代码补全和开发辅助功能。
+
+#### Cursor 规则文件系统
+项目位于 `.cursor/rules/` 目录下，包含5个专业规则文件，每个文件针对特定开发场景：
+
+##### 🔧 后端开发规则 (backend-guide.mdc)
+- **使用场景**: Go + Gin 后端开发时启用
+- **核心职能**: 
+  - MVC架构规范指导 (Controller/Service/Model分层)
+  - 数据库操作和配置管理最佳实践
+  - JWT认证、中间件、错误处理规范
+  - 日志管理和API设计规范
+- **适用范围**: 后端API开发、数据库设计、服务层逻辑
+
+##### 🎨 前端开发规则 (frontend-guide.mdc)
+- **使用场景**: Vue 3 + Vite 前端开发时启用
+- **核心职能**:
+  - Vue 3 Composition API开发规范
+  - 响应式CSS Grid布局解决方案 (解决布局失效问题)
+  - 组件开发和状态管理最佳实践
+  - 移动端适配和样式规范
+- **关键特性**: 专门解决CSS Grid布局在不同屏幕尺寸下的适配问题
+
+##### 🧪 测试开发规则 (testing-guide.mdc)
+- **使用场景**: 编写单元测试、集成测试、E2E测试时启用
+- **核心职能**:
+  - Go后端测试规范 (testing包 + testify)
+  - Vue前端测试规范 (Vitest + Vue Test Utils)
+  - 测试覆盖率要求和测试金字塔策略
+  - Mock数据和测试数据库配置
+- **测试策略**: 单元测试→集成测试→端到端测试的完整测试流程
+
+##### 💬 交流模式规则 (communication-guide.mdc)
+- **使用场景**: 与AI助手协作开发时的交流规范
+- **核心职能**:
+  - 5种专业交流模式: [需求分析]、[开发模式]、[调试模式]、[测试模式]、[总结模式]
+  - 模式间上下文传递和文档生成规范
+  - 确保开发流程的连贯性和可追溯性
+- **工作流程**: 需求→开发→调试→测试→总结的完整开发周期
+
+##### 📚 文档管理规则 (documentation-guide.mdc)
+- **使用场景**: 项目文档编写和维护时启用
+- **核心职能**:
+  - 文档分类和目录结构规范
+  - Markdown写作规范和文档质量标准
+  - 文档版本控制和协作流程
+  - 新用户引导和开发者参考路径
+- **管理范围**: 安装指南、架构文档、开发规范、部署文档
+
+#### 规则文件使用方法
+```bash
+# 后端开发时
+在Cursor中输入: @backend-guide.mdc 开始后端开发
+
+# 前端开发时  
+在Cursor中输入: @frontend-guide.mdc 开始前端开发
+
+# 测试开发时
+在Cursor中输入: @testing-guide.mdc 编写测试代码
+
+# 使用交流模式
+在对话中输入: [开发模式] 或 [调试模式] 等模式声明
+
+# 文档编写时
+在Cursor中输入: @documentation-guide.mdc 规范文档写作
+```
+
+#### 推荐的Cursor设置
+```json
+{
+  "cursor.cpp.autocomplete": true,
+  "cursor.general.enableAutoComplete": true,
+  "cursor.preferredLanguage": "中文",
+  "cursor.rules.enable": true,
+  "cursor.rules.autoLoad": [
+    ".cursor/rules/backend-guide.mdc",
+    ".cursor/rules/frontend-guide.mdc"
+  ]
+}
+```
+
+### 文档系统 （还在完善）
+
+项目采用分层文档结构，位于 `./docs/` 目录：
+
+```
+docs/
+├── setup/                    # 🚀 安装配置文档
+│   └── installation-guide.md    # 详细安装指南
+├── architecture/             # 🏗️ 架构设计文档  
+│   ├── project-structure.md     # 项目结构说明
+│   └── backend-mvc-guide.md     # 后端MVC架构
+└── development/              # 📈 开发相关文档
+    ├── coding-standards.md      # 编码规范
+    └── project-reports.md       # 项目状态报告
+```
 
 ---
 
