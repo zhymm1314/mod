@@ -4,15 +4,36 @@
 
 ## 📋 目录
 
-- [Cursor 简介](#cursor-简介)
-- [收费机制详解](#收费机制详解)
-- [模型选择策略](#模型选择策略)
-- [Cursor Rules 编写指南](#cursor-rules-编写指南)
-- [编程语言支持](#编程语言支持)
-- [使用场景最佳实践](#使用场景最佳实践)
-- [推荐插件扩展](#推荐插件扩展)
-- [高级技巧](#高级技巧)
-- [常见问题解答](#常见问题解答)
+- [Cursor 简介](#-cursor-简介)
+  - [核心特性](#核心特性)
+- [收费机制详解](#-收费机制详解)
+  - [免费版 (Hobby)](#-免费版-hobby)
+  - [Pro 版](#-pro-版)
+  - [Business 版](#-business-版)
+  - [收费建议](#-收费建议)
+- [模型选择策略](#-模型选择策略)
+  - [模型对比表](#模型对比表)
+  - [场景化模型选择](#场景化模型选择)
+- [Cursor Rules 编写指南](#-cursor-rules-编写指南)
+  - [Rules 生成和配置方式](#rules-生成和配置方式)
+  - [操作模式详解](#-操作模式详解)
+  - [User Rules 实例和最佳实践](#-user-rules-实例和最佳实践)
+  - [Rules 编写技巧](#-rules-编写技巧)
+- [编程语言支持](#-编程语言支持)
+  - [一级支持 (优秀)](#-一级支持-优秀)
+  - [框架特定支持](#框架特定支持)
+- [使用场景最佳实践](#-使用场景最佳实践)
+  - [新项目开发](#-新项目开发)
+  - [代码重构](#-代码重构)
+  - [问题调试](#-问题调试)
+  - [学习新技术](#-学习新技术)
+- [推荐插件扩展](#-推荐插件扩展)
+  - [AI 增强插件](#-ai-增强插件)
+  - [快捷键和操作优化](#️-快捷键和操作优化)
+  - [语言特定插件](#-语言特定插件)
+- [高级技巧](#-高级技巧)
+- [常见问题解答](#-常见问题解答)
+- [总结建议](#-总结建议)
 
 ## 🚀 Cursor 简介
 
@@ -81,6 +102,8 @@ Cursor 是一款基于 AI 的智能代码编辑器，集成了多种大语言模
 - **小团队**: Pro 版性价比最高
 - **企业**: Business 版提供完整的企业级功能
 
+[↑ 返回目录](#-目录)
+
 ## 🤖 模型选择策略
 
 ### 模型对比表
@@ -147,6 +170,8 @@ Cursor 是一款基于 AI 的智能代码编辑器，集成了多种大语言模
 "重构这段代码，提高可读性和性能，遵循SOLID原则"
 ```
 
+[↑ 返回目录](#-目录)
+
 ## 📋 Cursor Rules 编写指南
 
 ### Rules 文件结构
@@ -167,9 +192,9 @@ Cursor 是一款基于 AI 的智能代码编辑器，集成了多种大语言模
 # 项目开发规范
 
 ## 技术栈
-- 前端: React + TypeScript + Tailwind CSS
-- 后端: Node.js + Express + MongoDB
-- 测试: Jest + Cypress
+- 前端: Vue 3 + TypeScript + Tailwind CSS
+- 后端: Go + Gin + MongoDB
+- 测试: Vitest + Cypress
 
 ## 代码风格
 - 使用 ESLint + Prettier
@@ -227,9 +252,326 @@ src/
 - 文档字符串使用 Google 风格
 ```
 
-### Rules 编写技巧
+### Rules 生成和配置方式
 
-#### ✅ 好的 Rules 示例
+#### 🛠️ Rules 创建步骤
+
+**1. 通过界面创建 Rules**
+```
+方式一: 通过 Cursor 界面
+1. 打开 Cursor 设置 (Ctrl/Cmd + ,)
+2. 搜索 "Cursor Rules" 或 "Rules for AI"
+3. 点击 "Edit Rules" 按钮
+4. 在编辑器中编写您的规则
+
+方式二: 手动创建文件
+1. 在项目根目录创建 .cursor/ 文件夹
+2. 在 .cursor/ 文件夹内创建 rules 文件
+3. 编写具体的开发规范和指导原则
+```
+
+> **注意**: 由于图片展示限制，建议您在 Cursor 中按照上述步骤操作，界面会有清晰的 Rules 编辑入口
+
+**2. User Rules 配置 (个人偏好设置)**
+```
+位置: Cursor 设置 → User Rules
+功能: 设置个人的开发偏好和交流风格
+优先级: 高于项目 Rules，应用于所有项目
+```
+
+**3. 从原有项目生成 Rules (智能分析方式)**
+```
+方式三: AI 辅助生成项目 Rules
+1. 打开 Cursor AI 对话界面 (Ctrl/Cmd + K)
+2. 使用以下提示词让 AI 分析项目结构：
+
+提示词模板:
+"分析当前项目的代码结构、技术栈和编程风格，为我生成一套适合的 Cursor Rules 配置。
+请重点关注：
+- 项目使用的编程语言和框架
+- 代码风格和命名规范
+- 文件组织结构
+- 依赖管理方式
+- 测试框架和规范"
+
+3. AI 会分析项目文件并生成定制化的 Rules
+4. 复制生成的 Rules 内容到 .cursor/rules 文件中
+5. 根据团队需求进行微调和完善
+```
+
+**实际操作示例:**
+```markdown
+# 示例对话过程
+
+👤 用户: 分析我的 Vue + Go 项目，生成合适的 Cursor Rules
+
+🤖 AI 分析结果:
+基于您的项目分析，我发现：
+- 前端框架: Vue 3 + TypeScript
+- 状态管理: Pinia
+- 样式方案: Tailwind CSS + CSS Modules
+- 测试框架: Vitest + Vue Test Utils
+- 构建工具: Vite
+- 后端框架: Go + Gin
+- 代码规范: ESLint + Prettier + gofmt
+
+生成的 Rules 配置:
+```typescript
+# Vue + Go 全栈项目开发规范
+
+## 前端技术栈要求
+- 使用 Vue 3 Composition API
+- 严格使用 TypeScript，避免 any 类型
+- 优先使用 Pinia 进行状态管理
+- 样式使用 Tailwind CSS 原子类
+
+## Vue 组件开发规范
+- 组件文件使用 PascalCase 命名
+- Props 定义使用 defineProps<T>()
+- 组合式函数以 use 开头
+- 组件使用 <script setup> 语法
+
+## Go 后端开发规范
+- 遵循 Go 官方代码风格指南
+- 使用 Gin 框架构建 REST API
+- 错误处理要显式和具体
+- 接口设计要简洁明确
+
+## 代码质量要求
+- Vue 组件必须有完整的 TypeScript 类型定义
+- 复杂逻辑抽取为 composables
+- 使用 v-memo 优化性能敏感组件
+- Go 函数要有完整的错误处理
+```
+
+**更多语言项目示例:**
+
+```markdown
+# Python 项目分析示例
+👤 用户: "分析我的 FastAPI + SQLAlchemy 项目，生成开发规范"
+
+🤖 AI 生成的 Rules:
+# Python FastAPI 项目开发规范
+
+## 代码风格
+- 遵循 PEP 8 和 Black 格式化规范
+- 使用 type hints 进行严格类型注解
+- 函数和变量使用 snake_case 命名
+- 类名使用 PascalCase 命名
+
+## API 开发规范
+- 路由使用 APIRouter 进行模块化组织
+- 响应模型必须继承 BaseModel
+- 异常处理使用 HTTPException
+- 依赖注入用于数据库连接和认证
+
+## 数据库规范
+- 模型定义使用 SQLAlchemy ORM
+- 迁移文件使用 Alembic 管理
+- 查询操作封装在 repository 层
+- 事务处理确保数据一致性
+```
+
+```markdown
+# Go 项目分析示例
+👤 用户: "分析我的 Gin + GORM 微服务项目，生成规范"
+
+🤖 AI 生成的 Rules:
+# Go 微服务项目开发规范
+
+## 代码组织
+- 遵循 Go 官方项目布局标准
+- 包名使用小写，简洁明了
+- 接口定义要小而专一
+- 错误处理要显式和具体
+
+## API 开发规范
+- 使用 Gin 框架构建 REST API
+- 中间件用于认证、日志、限流
+- 参数验证使用 validator 标签
+- 响应格式统一，包含状态码和消息
+
+## 微服务规范
+- 服务间通信优先使用 gRPC
+- 配置管理使用环境变量
+- 日志格式采用结构化日志 (JSON)
+- 健康检查和指标监控必须实现
+```
+
+**高级分析技巧:**
+
+```markdown
+# 深度分析提示词
+"请深度分析我的项目，包括：
+1. 📁 项目架构模式 (MVC/分层/微服务等)
+2. 🔧 使用的设计模式和最佳实践
+3. 📊 性能优化关注点
+4. 🔒 安全规范和漏洞防护
+5. 🧪 测试策略和覆盖率要求
+6. 📝 文档和注释规范
+7. 🚀 部署和运维考虑
+
+基于分析结果生成完整的开发规范 Rules"
+```
+
+**智能生成的优势:**
+- 🎯 **精准适配**: 基于实际项目代码分析，生成针对性规范
+- 🚀 **快速启动**: 无需从零编写，大幅节省配置时间
+- 📚 **学习参考**: 了解项目最佳实践和改进建议
+- 🔄 **持续优化**: 随项目演进不断调整和完善规范
+- 🤝 **团队协作**: 基于现有代码风格，减少团队分歧
+- 🔍 **问题发现**: AI 可能识别出代码中的潜在问题和改进点
+
+**使用注意事项:**
+1. **隐私保护**: 确保项目中没有敏感信息泄露
+2. **规范验证**: 生成的规范需要团队评审和确认
+3. **定期更新**: 随着项目发展需要定期重新生成和调整
+4. **渐进采用**: 可以分模块逐步应用生成的规范
+```
+
+#### 🎭 操作模式详解
+
+**Agent 模式 (AI 自主操作)**
+```
+特点:
+├── AI 直接编辑和修改文件
+├── 自动化程度最高
+├── 适合快速开发和原型制作
+└── 需要明确的指导规则
+
+使用场景:
+├── 新项目快速搭建
+├── 重复性代码生成
+├── 批量文件处理
+└── 自动化重构
+
+风险控制:
+├── 设置详细的 Rules 约束
+├── 定期检查 AI 修改内容
+├── 重要文件建议手动确认
+└── 保持版本控制习惯
+```
+
+**Ack 模式 (确认后执行)**
+```
+特点:
+├── AI 提供方案，用户确认后执行
+├── 平衡了效率和安全性
+├── 适合大多数开发场景
+└── 可预览修改内容
+
+使用场景:
+├── 功能开发和修改
+├── 代码重构和优化
+├── 问题修复和调试
+└── 新技术学习实践
+
+操作流程:
+1. 用户描述需求
+2. AI 分析并提供方案
+3. 用户确认或调整方案
+4. AI 执行具体修改
+```
+
+**Manual 模式 (纯咨询模式)**
+```
+特点:
+├── AI 只提供建议和代码示例
+├── 用户手动实现所有修改
+├── 最高的控制权和安全性
+└── 适合学习和关键代码
+
+使用场景:
+├── 关键业务逻辑开发
+├── 安全敏感代码
+├── 学习新技术概念
+└── 代码审查和咨询
+
+优势:
+├── 完全的代码控制权
+├── 深度理解实现过程
+├── 避免意外的代码修改
+└── 适合团队规范要求
+```
+
+#### 🎯 User Rules 实例和最佳实践
+
+**实例 1: 中文 Python 开发者配置**
+```markdown
+# 个人开发偏好 Rules
+
+## 交流语言和风格
+- Always respond in 中文, my programming language is Python
+- 请用简洁的风格回复，避免不必要的重复或赘述
+- 每次都用审视的目光，仔细看我输入的潜在问题
+- 你要指出我的问题，并给出明显在我思考框架之外的建议
+- 如果你觉得我说的太离谱，要及时指出
+- 如果回答与之前的结果差不多，请仔细查看其他报错细节，换种思路解答给出建议
+
+## Python 开发规范
+- 优先使用 Python 3.9+ 语法特性
+- 遵循 PEP 8 代码风格
+- 使用 type hints 进行类型注解
+- 异常处理要具体明确
+- 优先考虑代码可读性和维护性
+
+## 代码审查要求
+- 检查潜在的性能问题
+- 关注安全漏洞和边界条件
+- 建议更好的算法和数据结构
+- 提供单元测试建议
+```
+
+**实例 2: 全栈 JavaScript 开发者配置**
+```markdown
+# Full-Stack JavaScript Developer Rules
+
+## Communication Style
+- Provide concise, actionable responses
+- Include code examples for complex concepts
+- Explain the reasoning behind technical decisions
+- Suggest alternative approaches when applicable
+
+## Tech Stack Preferences
+- Frontend: Vue 3 + TypeScript + Tailwind CSS
+- Backend: Go + Gin + MongoDB/PostgreSQL
+- Testing: Vitest + Vue Test Utils + Cypress
+- Build Tools: Vite + ESLint + Prettier + gofmt
+
+## Code Quality Standards
+- Use TypeScript for all new JavaScript projects
+- Implement proper error handling and logging
+- Follow SOLID principles and clean code practices
+- Ensure responsive design and accessibility
+- Optimize for performance and SEO
+```
+
+**实例 3: Go 微服务开发者配置**
+```markdown
+# Go Microservices Developer Rules
+
+## 开发规范
+- 使用 Go 1.19+ 特性
+- 遵循 Go 官方代码风格指南
+- 优先使用标准库，谨慎引入第三方依赖
+- 接口设计要简洁明确
+
+## 微服务架构要求
+- 每个服务职责单一，边界清晰
+- 使用 gRPC 进行服务间通信
+- 实现完整的可观测性 (日志/指标/链路追踪)
+- 遵循 12-Factor App 原则
+
+## 代码审查重点
+- 并发安全和 goroutine 泄漏
+- 错误处理和资源清理
+- 性能优化和内存使用
+- 单元测试覆盖率
+```
+
+#### 📝 Rules 编写技巧
+
+**✅ 好的 Rules 示例**
 ```markdown
 # 具体明确的指导
 当用户要求实现用户认证时：
@@ -248,7 +590,7 @@ interface AuthService {
 }
 ```
 
-#### ❌ 避免的 Rules 写法
+**❌ 避免的 Rules 写法**
 ```markdown
 # 过于模糊的指导
 - 写好代码
@@ -259,6 +601,13 @@ interface AuthService {
 （避免写几百行的详细说明，要简洁明了）
 ```
 
+**💡 Rules 优化建议**
+1. **分层设计**: User Rules (个人) → Project Rules (项目) → Feature Rules (功能)
+2. **定期更新**: 根据项目进展和技术栈变化及时调整
+3. **团队共享**: 重要的 Rules 可以作为团队规范分享
+4. **测试验证**: 定期检查 AI 是否按照 Rules 执行
+5. **版本控制**: 将 Rules 纳入版本控制，便于追踪变化
+
 ## 🌐 编程语言支持
 
 ### 🥇 一级支持 (优秀)
@@ -267,7 +616,7 @@ JavaScript/TypeScript
 ├── 智能补全: ⭐⭐⭐⭐⭐
 ├── 代码生成: ⭐⭐⭐⭐⭐
 ├── 重构建议: ⭐⭐⭐⭐⭐
-└── 框架支持: React, Vue, Angular, Node.js
+└── 框架支持: Vue, React, Angular, Gin
 
 Python
 ├── 智能补全: ⭐⭐⭐⭐⭐
@@ -307,16 +656,16 @@ Dart, Scala, Haskell, Lua, Shell
 ### 框架特定支持
 
 #### 前端框架
-- **React**: 组件生成、Hook 使用、状态管理
-- **Vue**: 组合式 API、响应式数据、组件通信
+- **Vue**: 组件生成、Composition API、状态管理、响应式数据
+- **React**: Hook 使用、组件生命周期、状态管理
 - **Angular**: 服务注入、组件生命周期、RxJS
 - **Svelte**: 响应式语法、组件编写
 
 #### 后端框架
+- **Gin**: 路由组、中间件、JSON 处理、性能优化
 - **Express.js**: 路由设计、中间件、错误处理
 - **Django**: 模型设计、视图函数、模板系统
 - **Spring Boot**: 注解使用、依赖注入、配置管理
-- **Gin**: 路由组、中间件、JSON 处理
 
 ## 🎯 使用场景最佳实践
 
@@ -608,10 +957,11 @@ Cursor 基于 VS Code 构建，支持丰富的插件生态系统。以下是针�
 必装插件:
 ├── TypeScript Importer
 ├── Auto Rename Tag
-├── ES7+ React/Redux/React-Native snippets
+├── Vue Language Features (Volar)
 └── JavaScript (ES6) code snippets
 
 推荐插件:
+├── Vue VSCode Snippets
 ├── Quokka.js (实时代码执行)
 ├── Import Cost (包大小显示)
 └── Bundle Analyzer
@@ -714,8 +1064,8 @@ cursor --install-extension ms-python.python
 5. **Live Server** - 前端实时预览
 
 #### 🔧 语言特定必装
+- **Vue/TypeScript**: Vue Language Features (Volar) + Vue VSCode Snippets
 - **Python**: Python + Pylance + autoDocstring
-- **JavaScript/TypeScript**: TypeScript Importer + ES7 Snippets
 - **Go**: Go (官方) + Go Test Explorer
 - **Java**: Extension Pack for Java + Spring Boot Tools
 
@@ -731,8 +1081,8 @@ cursor --install-extension ms-python.python
 ### 1. 上下文管理
 ```markdown
 # 有效的上下文提供
-当前项目: React + TypeScript + Tailwind CSS
-当前文件: src/components/UserProfile.tsx
+当前项目: Vue 3 + TypeScript + Tailwind CSS
+当前文件: src/components/UserProfile.vue
 需求: 添加用户头像上传功能
 
 请基于现有代码风格实现...
@@ -792,21 +1142,42 @@ cursor --install-extension ms-python.python
 ### Q5: 支持团队协作吗？
 **A**: Business 版支持团队功能，可以共享 Rules 和配置。
 
-### Q6: 推荐的插件会影响 Cursor 性能吗？
+### Q6: User Rules 和 Project Rules 有什么区别？
+**A**: 
+- **User Rules**: 个人偏好设置，应用于所有项目，优先级最高
+- **Project Rules**: 项目特定规范，只在当前项目生效
+- **优先级**: User Rules > Project Rules > 默认规则
+- **使用建议**: User Rules 设置个人习惯，Project Rules 设置技术规范
+
+### Q7: Agent/Ack/Manual 模式如何选择？
+**A**: 
+- **Agent 模式**: 适合快速原型开发、重复性任务、有明确 Rules 约束的场景
+- **Ack 模式**: 适合大多数开发场景，平衡效率和安全性
+- **Manual 模式**: 适合关键业务逻辑、学习新技术、需要完全控制的场景
+
+### Q8: Rules 不生效怎么办？
+**A**: 
+1. 检查 Rules 文件路径是否正确 (.cursor/rules 或设置中的 Rules)
+2. 确认 Rules 语法格式正确
+3. 重启 Cursor 使 Rules 生效
+4. 检查 Rules 内容是否过于复杂或冲突
+5. 尝试简化 Rules 内容进行测试
+
+### Q9: 推荐的插件会影响 Cursor 性能吗？
 **A**: 
 - 适量安装插件不会明显影响性能
 - 建议只安装必需的插件
 - 定期禁用不常用的插件
 - 关注插件的内存和CPU使用情况
 
-### Q7: IntelliJ IDEA Keybindings 插件好用吗？
+### Q10: IntelliJ IDEA Keybindings 插件好用吗？
 **A**: 
 - 对 JetBrains IDE 用户来说非常友好
 - 几乎完美复制了 IDEA 的快捷键体验
 - 大大降低了从 IDEA 迁移到 Cursor 的学习成本
 - 强烈推荐给习惯 JetBrains 快捷键的开发者
 
-### Q8: Save Typing 插件如何配置？
+### Q11: Save Typing 插件如何配置？
 **A**: 
 ```json
 {
@@ -816,6 +1187,14 @@ cursor --install-extension ms-python.python
 }
 ```
 建议设置1秒延迟，避免过于频繁的保存操作。
+
+### Q12: 如何调试 Rules 配置？
+**A**: 
+- 在对话中明确提到 Rules 要求，观察 AI 是否遵循
+- 逐步添加 Rules 内容，测试每项规则的效果
+- 使用简单明确的语言编写 Rules
+- 定期检查和更新 Rules 内容
+- 参考其他开发者的 Rules 示例进行优化
 
 ## 🎯 总结建议
 
@@ -840,5 +1219,11 @@ cursor --install-extension ms-python.python
 
 **让 AI 成为您的编程伙伴，而不是替代品！** 🤝
 
-> 本文档持续更新，欢迎反馈和建议
-> 最后更新: 2024年06月 
+[↑ 返回顶部](#cursor-最佳实践指南)
+
+---
+
+> 本文档持续更新，欢迎反馈和建议  
+> 最后更新: 2024年12月  
+> 
+> **快速导航**: [目录](#-目录) | [简介](#-cursor-简介) | [收费](#-收费机制详解) | [模型](#-模型选择策略) | [Rules](#-cursor-rules-编写指南) | [插件](#-推荐插件扩展) | [FAQ](#-常见问题解答) 
